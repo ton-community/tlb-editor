@@ -11,7 +11,7 @@ import {
 	TLBVarExpr,
 	TLBVariable,
 	// @ts-ignore
-} from '@ton-community/tlb-codegen/build';
+} from '@polyprogrammist_test/tlb-codegen/build';
 
 import { importTonDependencies } from '../pages/Main/utils';
 
@@ -227,7 +227,11 @@ export class DefaultJsonGenerator {
 		} else if (fieldType.kind == 'TLBCellType') {
 			res = this.beginCell().endCell().toBoc().toString('base64');
 		} else if (fieldType.kind == 'TLBBoolType') {
-			res = false;
+			if (fieldType.value) {
+				res = { kind: 'Bool', value: true };
+			} else {
+				res = { kind: 'Bool', value: false };
+			}
 		} else if (fieldType.kind == 'TLBCoinsType') {
 			res = '0';
 		} else if (fieldType.kind == 'TLBVarIntegerType') {
@@ -277,6 +281,8 @@ export class DefaultJsonGenerator {
 			}
 		} else if (fieldType.kind == 'TLBCondType') {
 			res = null;
+		} else if (fieldType.kind == 'TLBTupleType') {
+			res = [];
 		} else if (fieldType.kind == 'TLBMultipleType') {
 			let x = this.handleType(field, fieldType.value, ctx, y);
 			res = [];

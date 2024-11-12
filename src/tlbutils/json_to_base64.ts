@@ -8,7 +8,7 @@ import {
 	TLBType,
 	TLBVariable,
 	// @ts-ignore
-} from '@ton-community/tlb-codegen/build';
+} from '@polyprogrammist_test/tlb-codegen/build';
 
 import { importTonDependencies } from '@/pages/Main/utils';
 
@@ -239,6 +239,11 @@ class X {
 				res = undefined;
 			} else {
 				res = this.handleType(field, fieldType.value, tlbCode, json, y);
+			}
+		} else if (fieldType.kind == 'TLBTupleType') {
+			res = [];
+			for (let i = 0; i < json.length; i++) {
+				res.push(this.handleType(field, fieldType.value[i], tlbCode, json[i], y));
 			}
 		} else if (fieldType.kind == 'TLBMultipleType') {
 			res = [];
