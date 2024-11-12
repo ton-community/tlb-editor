@@ -251,7 +251,7 @@ export const Main: React.FC = () => {
 				// handleTypeChange(newSelectedType, newModule, value);
 
 				if (lastEdited === 'serialized') {
-					console.log('start regenerate srialized');
+
 					if (
 						(selectedSerializedDataType === 'base64' && !base64) ||
 						(selectedSerializedDataType === 'hex' && !hex)

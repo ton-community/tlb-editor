@@ -7,4 +7,4 @@ export {
 	getTLBCodeByAST,
 	TypescriptGenerator,
 	// @ts-ignore
-} from '@ton-community/tlb-codegen/build';
+} from '@polyprogrammist_test/tlb-codegen/build';

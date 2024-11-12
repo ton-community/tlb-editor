@@ -3,7 +3,7 @@ import { Buffer } from 'buffer';
 export const importTonDependencies = async () => {
 	const ton = await import('@ton/core');
 
-	const { beginCell, Dictionary, Builder, Slice, BitString, Cell, Address } =
+	const { beginCell, Dictionary, Builder, Slice, BitString, Cell, Address, serializeTuple, parseTuple } =
 		ton;
 
 	(window as any).beginCell = beginCell;
@@ -13,6 +13,8 @@ export const importTonDependencies = async () => {
 	(window as any).BitString = BitString;
 	(window as any).Cell = Cell;
 	(window as any).Address = Address;
+	(window as any).serializeTuple = serializeTuple;
+	(window as any).parseTuple = parseTuple;
 
 	return {
 		beginCell,
@@ -22,6 +24,8 @@ export const importTonDependencies = async () => {
 		BitString,
 		Cell,
 		Address,
+		serializeTuple,
+		parseTuple,
 	};
 };
 
