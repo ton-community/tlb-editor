@@ -1,1 +1,0 @@
-export { SerializedDataTypeTab } from './SerializedDataTypeTab';
