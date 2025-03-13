@@ -1,5 +1,5 @@
 import {
-	isBigIntExrForJson,
+	isBigIntExprForJson,
 	isBigIntForJson,
 	TLBCode,
 	TLBConstructor,
@@ -245,7 +245,7 @@ export class DefaultJsonGenerator {
 				res = null;
 			}
 		} else if (fieldType.kind == 'TLBExprMathType') {
-			if (isBigIntExrForJson(fieldType)) {
+			if (isBigIntExprForJson(fieldType)) {
 				res = '0';
 			} else {
 				res = 0;
