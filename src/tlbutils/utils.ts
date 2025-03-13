@@ -5,8 +5,7 @@ import {
 	TLBNumberExpr,
 	TLBType,
 	TLBVarExpr,
-	// @ts-ignore
-} from '@polyprogrammist_test/tlb-codegen/build';
+} from '@ton-community/tlb-codegen';
 
 export function getSubStructName(
 	tlbType: TLBType,

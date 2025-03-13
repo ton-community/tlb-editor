@@ -10,8 +10,7 @@ import {
 	TLBType,
 	TLBVarExpr,
 	TLBVariable,
-	// @ts-ignore
-} from '@polyprogrammist_test/tlb-codegen/build';
+} from '@ton-community/tlb-codegen';
 
 import { importTonDependencies } from '../pages/Main/utils';
 
