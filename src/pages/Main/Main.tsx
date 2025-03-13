@@ -168,6 +168,7 @@ export const Main: React.FC = () => {
 				let humanReadableJson = JSON.parse(value);
 
 				let tlbCode = getTLBCodeByAST(tree, currentTlbSchema);
+
 				let data = await humanJsonToBase64(
 					humanReadableJson['kind'],
 					tlbCode,
@@ -190,7 +191,7 @@ export const Main: React.FC = () => {
 				setIsSerializedDataLoading(false);
 			}
 		},
-		[module]
+		[module, selectedType]
 	);
 
 	const handleJsonDataChangeDebounced: OnChange = useCallback(

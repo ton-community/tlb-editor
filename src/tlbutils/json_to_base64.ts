@@ -35,6 +35,7 @@ export async function humanJsonToBase64(
 	s = s.jsonToType(typeName, tlbCode, json);
 
 	let builder = beginCell();
+
 	method(s)(builder);
 	return builder.asCell().toBoc().toString('base64');
 }
