@@ -242,7 +242,7 @@ export const Main: React.FC = () => {
 
 				const scriptURL = URL.createObjectURL(blob);
 
-				const newModule = await import(scriptURL);
+				const newModule = await import(/* @vite-ignore */ scriptURL);
 				setModule(newModule);
 
 				setTlbError('');
