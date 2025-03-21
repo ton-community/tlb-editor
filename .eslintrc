@@ -1,0 +1,65 @@
+{
+  "extends": [
+	"react-app"
+  ],
+  "plugins": [
+	"prettier",
+	"simple-import-sort"
+  ],
+  "rules": {
+	"quotes": [
+	  "error",
+	  "single",
+	  { "avoidEscape": true }
+	],
+	"prettier/prettier": ["error", {"singleQuote": true, "semi": true, "useTabs": true}],
+	"no-trailing-spaces": "error",
+	"object-curly-spacing": [
+	  "error",
+	  "always"
+	],
+	"block-spacing": "error",
+	"no-var": "error",
+	"keyword-spacing": "error",
+	"simple-import-sort/exports": "error",
+	"simple-import-sort/imports": [
+	  "error",
+	  {
+		"groups": [
+		  // Packages. `react` related packages come first.
+		  ["^react$"],
+		  // Packages
+		  ["^\\w", "^@"],
+		  // Side effect imports.
+		  ["^\\u0000"],
+		  // Frontend root imports
+		  ["^(@/)"],
+		  // Parent imports. Put `..` last.
+		  ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+		  // Other relative imports. Put same-folder imports and `.` last.
+		  ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+		  // Style imports.
+		  ["^.+\\.s?css$"]
+		]
+	  }
+	],
+	"import/first": "error",
+	"import/newline-after-import": "error",
+	"import/no-duplicates": "error",
+	"no-multiple-empty-lines": [
+	  "error",
+	  {
+		"max": 2,
+		"maxEOF": 1
+	  }
+	],
+	"eol-last": [
+	  "error",
+	  "always"
+	],
+	"@typescript-eslint/no-empty-function": "off",
+	"@typescript-eslint/no-empty-interface": "off"
+  }
+}
+
+
