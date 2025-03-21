@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 
 import LZString from 'lz-string';
 import { Link, useLocation } from 'react-router-dom';
@@ -16,6 +16,10 @@ export const Header: React.FC = () => {
 		[paths.main]: 0,
 		[paths.about]: 1,
 	};
+
+	const [isRecentlyCopied, setIsRecentlyCopied] =
+		React.useState<boolean>(false);
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
 	const currentTabIndex = pathToTabIndex[location.pathname] || 0;
 
@@ -40,6 +44,18 @@ export const Header: React.FC = () => {
 			.catch((err) => {
 				console.error('Failed to copy URL: ', err);
 			});
+
+		setIsRecentlyCopied(true);
+
+		// Clear the previous timeout
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+
+		// Set a new timeout
+		timeoutRef.current = setTimeout(() => {
+			setIsRecentlyCopied(false);
+		}, 1000);
 	};
 
 	return (
@@ -63,7 +79,9 @@ export const Header: React.FC = () => {
 				</TabList>
 			</Tabs>
 
-			<Button onClick={handleShareClick}> Share</Button>
+			<Button onClick={handleShareClick}>
+				{isRecentlyCopied ? 'Link copied' : 'Share'}
+			</Button>
 		</Flex>
 	);
 };

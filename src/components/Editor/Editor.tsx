@@ -30,6 +30,11 @@ export const Editor: React.FC<EditorProps> = ({
 	...props
 }) => {
 	const hiddenLinkRef = useRef<HTMLAnchorElement>(null);
+
+	const [isRecentlyCopied, setIsRecentlyCopied] =
+		React.useState<boolean>(false);
+	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 	const handleCopy = () => {
 		navigator.clipboard
 			.writeText(value || '')
@@ -39,6 +44,16 @@ export const Editor: React.FC<EditorProps> = ({
 			.catch((err) => {
 				console.error('Failed to copy text: ', err);
 			});
+
+		setIsRecentlyCopied(true);
+
+		if (timeoutRef.current) {
+			clearTimeout(timeoutRef.current);
+		}
+
+		timeoutRef.current = setTimeout(() => {
+			setIsRecentlyCopied(false);
+		}, 1000);
 	};
 
 	const handleDownload = () => {
@@ -91,7 +106,7 @@ export const Editor: React.FC<EditorProps> = ({
 						mr={3}
 						size={'sm'}
 					>
-						Copy
+						{isRecentlyCopied ? 'Copied' : 'Copy'}
 					</Button>
 					<Button
 						onClick={handleDownload}

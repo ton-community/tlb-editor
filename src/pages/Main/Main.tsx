@@ -71,7 +71,7 @@ export const Main: React.FC = () => {
 		setHex,
 		setLastEdited,
 		lastEdited,
-		handleTypeChange,
+		// handleTypeChange,
 	} = useContext(AppContext);
 
 	const [searchParams] = useSearchParams();
@@ -95,7 +95,6 @@ export const Main: React.FC = () => {
 			}
 
 			if (value === '') {
-				console.log('empty');
 				setJsonData('');
 				setIsJsonDataLoading(false);
 				return;
@@ -111,7 +110,7 @@ export const Main: React.FC = () => {
 				: newModule || {};
 			//@ts-ignore
 			let ft = currentModule[`load${type}`];
-
+			console.log('base64 from serialized data handler', value);
 			const json = await base64ToHumanJson(value, ft);
 
 			setJsonData(
@@ -143,61 +142,62 @@ export const Main: React.FC = () => {
 		[handleSerializedDataChangeDebounced, setIsJsonDataLoading]
 	);
 
-	const jsonHandler = async (
-		value = '',
-		type = '',
-		newTlbSchema = '',
-		newModule?: {}
-	) => {
-		try {
-			console.log('json change');
-			setJsonData(value);
+	const jsonHandler = useCallback(
+		async (value = '', type = '', newTlbSchema = '', newModule?: {}) => {
+			try {
+				console.log('json change');
+				setJsonData(value);
 
-			if (!value) {
-				setHex('');
-				setBase64('');
-				return;
+				if (!value) {
+					setHex('');
+					setBase64('');
+					return;
+				}
+
+				type = type || selectedType;
+				if (!type) {
+					return;
+				}
+				const currentModule = Object.keys(newModule || {}).length
+					? newModule
+					: module;
+
+				const currentTlbSchema = newTlbSchema || tlbSchema;
+
+				const tree = ast(currentTlbSchema);
+				let humanReadableJson = JSON.parse(value);
+
+				let tlbCode = getTLBCodeByAST(tree, currentTlbSchema);
+
+				let data = await humanJsonToBase64(
+					humanReadableJson['kind'],
+					tlbCode,
+					humanReadableJson,
+					//@ts-ignore
+					currentModule[`store${type}`]
+				);
+				// { "kind": "BitSelection", "a": 5,
+				// "b": 5 }
+
+				setBase64(data);
+				setHex(base64ToHex(data));
+
+				setJsonDataError('');
+				setLastEdited('json');
+			} catch (error) {
+				console.error(error);
+				setJsonDataError('Data is invalid');
+			} finally {
+				setIsSerializedDataLoading(false);
 			}
+		},
+		[module, selectedType]
+	);
 
-			type = type || selectedType;
-			if (!type) {
-				return;
-			}
-			const currentModule = Object.keys(newModule || {}).length
-				? newModule
-				: module;
-
-			const currentTlbSchema = newTlbSchema || tlbSchema;
-
-			const tree = ast(currentTlbSchema);
-			let humanReadableJson = JSON.parse(value);
-
-			console.log('schema', tlbSchema);
-			let tlbCode = getTLBCodeByAST(tree, currentTlbSchema);
-			let data = await humanJsonToBase64(
-				humanReadableJson['kind'],
-				tlbCode,
-				humanReadableJson,
-				//@ts-ignore
-				currentModule[`store${type}`]
-			);
-			// { "kind": "BitSelection", "a": 5,
-			// "b": 5 }
-
-			setBase64(data);
-			setHex(base64ToHex(data));
-
-			setJsonDataError('');
-			setLastEdited('json');
-		} catch (error) {
-			console.error(error);
-			setJsonDataError('Data is invalid');
-		} finally {
-			setIsSerializedDataLoading(false);
-		}
-	};
-
-	const handleJsonDataChangeDebounced: OnChange = (value) => jsonHandler(value);
+	const handleJsonDataChangeDebounced: OnChange = useCallback(
+		(value) => jsonHandler(value),
+		[jsonHandler]
+	);
 
 	const handleJsonDataChange: OnChange = useCallback(
 		(value, model) => {
@@ -210,7 +210,6 @@ export const Main: React.FC = () => {
 
 	const tlbHandler = useCallback(
 		async (value = '') => {
-			console.log('change tlb change');
 			try {
 				setTlbSchema(value);
 				if (!value) {
@@ -230,7 +229,9 @@ export const Main: React.FC = () => {
 					.sort();
 
 				setTypes(types);
-				setSelectedType(types[0]);
+				console.log('selected Type');
+				const newSelectedType = selectedType || types[0];
+				setSelectedType(newSelectedType);
 				setCode(newCode);
 				const jsCode = ts
 					.transpile(newCode, { target: 2 })
@@ -241,14 +242,14 @@ export const Main: React.FC = () => {
 
 				const scriptURL = URL.createObjectURL(blob);
 
-				const newModule = await import(scriptURL);
+				const newModule = await import(/* @vite-ignore */ scriptURL);
 				setModule(newModule);
 
 				setTlbError('');
 
 				setIsCodeLoading(false);
 
-				handleTypeChange(types[0], newModule, value);
+				// handleTypeChange(newSelectedType, newModule, value);
 
 				if (lastEdited === 'serialized') {
 					console.log('start regenerate srialized');
@@ -276,6 +277,7 @@ export const Main: React.FC = () => {
 			}
 		},
 		[
+			selectedType,
 			base64,
 			handleJsonDataChange,
 			hex,
@@ -295,7 +297,7 @@ export const Main: React.FC = () => {
 
 	const handleTlbChangeDebounced: OnChange = useCallback(
 		debounce((value) => tlbHandler(value), 1000),
-		[]
+		[selectedType]
 	);
 
 	const handleTlbChange: OnChange = useCallback(
@@ -329,8 +331,10 @@ export const Main: React.FC = () => {
 
 			setSelectedType(typeState);
 			setBase64(base64State);
+			console.log('-----', base64State);
 
 			if (base64State) {
+				await serializedDataHandler(base64State, typeState, module);
 				await serializedDataHandler(base64State, typeState, module);
 			} else if (jsonState) {
 				await jsonHandler(jsonState, typeState, tlbState, module);

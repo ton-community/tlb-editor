@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "release": "npm run build && gh-pages --nojekyll --branch release --dist dist",
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
@@ -14,7 +15,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@monaco-editor/react": "^4.6.0",
-    "@ton-community/tlb-codegen": "^1.1.0",
+    "@ton-community/tlb-codegen": "^2.0.0-beta.0",
     "@ton/core": "^0.53.0",
     "buffer": "^6.0.3",
     "framer-motion": "^11.0.3",
@@ -23,7 +24,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.0",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^15.5.0",
+    "use-debounce": "^10.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-inject": "^5.0.5",
@@ -40,9 +42,10 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "eslint-plugin-simple-import-sort": "^10.0.0",
+    "gh-pages": "^6.3.0",
     "path": "^0.12.7",
     "prettier": "^2.8.4",
     "typescript": "^5.2.2",
-    "vite": "^5.0.8"
+    "vite": "^5.4.14"
   }
 }
