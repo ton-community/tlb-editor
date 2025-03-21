@@ -17,6 +17,6 @@ jobs:
       - run: |
           npm ci
           git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-          npm run release -u "github-actions-bot <support+actions@github.com>"
+          npm run release -- -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
