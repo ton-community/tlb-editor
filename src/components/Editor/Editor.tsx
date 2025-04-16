@@ -151,6 +151,7 @@ export const Editor: React.FC<EditorProps> = ({
 						options={{
 							showUnused: false,
 							minimap: { enabled: false },
+							wordWrap: 'on',
 							...options,
 						}}
 					/>
