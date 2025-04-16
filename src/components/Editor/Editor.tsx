@@ -15,6 +15,7 @@ type EditorProps = Omit<BoxProps, 'onChange'> &
 		footer?: React.ReactElement;
 		isLoading?: boolean;
 		fileName: string;
+		wordWrap?: 'on' | 'off' | 'wordWrapColumn' | 'bounded';
 	};
 
 export const Editor: React.FC<EditorProps> = ({
@@ -27,6 +28,7 @@ export const Editor: React.FC<EditorProps> = ({
 	footer,
 	isLoading = false,
 	fileName,
+	wordWrap,
 	...props
 }) => {
 	const hiddenLinkRef = useRef<HTMLAnchorElement>(null);
@@ -151,7 +153,7 @@ export const Editor: React.FC<EditorProps> = ({
 						options={{
 							showUnused: false,
 							minimap: { enabled: false },
-							wordWrap: 'on',
+							wordWrap: wordWrap,
 							...options,
 						}}
 					/>
