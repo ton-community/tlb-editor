@@ -383,6 +383,7 @@ export const Main: React.FC = () => {
 					errorMessage={serializedDataError}
 					onChange={handleSerializedDataChange}
 					fileName={'serialized.txt'}
+					wordWrap="on"
 				/>
 			</Flex>
 
