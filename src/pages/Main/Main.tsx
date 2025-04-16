@@ -39,6 +39,8 @@ const dummyEvent = {
 	isEolChange: false,
 };
 
+const formatString = (str: string) => str?.match(/.{1,80}/g)?.join('\n');
+
 export const Main: React.FC = () => {
 	const {
 		tlbSchema,
@@ -75,6 +77,9 @@ export const Main: React.FC = () => {
 	} = useContext(AppContext);
 
 	const [searchParams] = useSearchParams();
+
+	const formattedBase64 = formatString(base64);
+	const formattedHex = formatString(hex);
 
 	const serializedDataHandler = async (
 		value = '',
@@ -375,7 +380,11 @@ export const Main: React.FC = () => {
 					header={<SerializedDataTypeTab />}
 					flexGrow={1}
 					isLoading={isSerializedDataLoading}
-					value={selectedSerializedDataType === 'base64' ? base64 : hex}
+					value={
+						selectedSerializedDataType === 'base64'
+							? formattedBase64
+							: formattedHex
+					}
 					options={{
 						minimap: { enabled: false },
 						readOnly: !tlbSchema || Boolean(tlbError) || !selectedType,
