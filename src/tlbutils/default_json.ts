@@ -84,13 +84,13 @@ export class DefaultJsonGenerator {
 
 		let hasParams = false;
 		constructor.parameters.forEach((parameter: TLBParameter) => {
-			if (parameter.variable.type == 'Type') {
+			if (parameter.variable.type === 'Type') {
 				hasParams = true;
 			}
 		});
 
 		let y = new Map<string, TLBMathExpr>();
-		if (parameters.length != constructor.parameters.length && hasParams) {
+		if (parameters.length !== constructor.parameters.length && hasParams) {
 			return undefined;
 		}
 		for (let i = 0; i < parameters.length; i++) {
@@ -100,7 +100,7 @@ export class DefaultJsonGenerator {
 		x.kind = getSubStructName(tlbType, constructor);
 
 		constructor.variables.forEach((variable: TLBVariable) => {
-			if (variable.type == '#' && !variable.isField) {
+			if (variable.type === '#' && !variable.isField) {
 				if (y.has(variable.name)) {
 					x[variable.name] = y.get(variable.name);
 				} else {
@@ -123,7 +123,7 @@ export class DefaultJsonGenerator {
 		}
 
 		constructor.variables.forEach((variable: TLBVariable) => {
-			if (variable.type == '#') {
+			if (variable.type === '#') {
 				if (y.has(variable.name)) {
 					let t = y.get(variable.name);
 					if (t) {
@@ -146,7 +146,7 @@ export class DefaultJsonGenerator {
 	): any | undefined {
 		if (ctx.constructorsReached.has(tlbType.name)) {
 			let i = ctx.constructorsCalculated.get(tlbType.name);
-			if (i != undefined) {
+			if (i !== undefined) {
 				return this.getTLBConstructorResult(
 					tlbType,
 					tlbType.constructors[i],
@@ -190,7 +190,7 @@ export class DefaultJsonGenerator {
 			});
 			return ok;
 		}
-		if (field.subFields.length == 0) {
+		if (field.subFields.length === 0) {
 			let res = this.handleType(field, field.fieldType, ctx, y);
 			if (res !== undefined) {
 				x[field.name] = res;
@@ -209,13 +209,13 @@ export class DefaultJsonGenerator {
 	): any | undefined {
 		let res: any | undefined = undefined;
 
-		if (fieldType.kind == 'TLBNumberType') {
+		if (fieldType.kind === 'TLBNumberType') {
 			if (isBigIntForJson(fieldType)) {
 				res = '0';
 			} else {
 				res = 0;
 			}
-		} else if (fieldType.kind == 'TLBBitsType') {
+		} else if (fieldType.kind === 'TLBBitsType') {
 			let bitsNumber = evaluateExpression(fieldType.bits, y);
 			if (bitsNumber) {
 				res = '0b' + '0'.repeat(bitsNumber);
@@ -224,32 +224,32 @@ export class DefaultJsonGenerator {
 					`Number of bits should be known and not zero in field ${field.name}`
 				);
 			}
-		} else if (fieldType.kind == 'TLBCellType') {
+		} else if (fieldType.kind === 'TLBCellType') {
 			res = this.beginCell().endCell().toBoc().toString('base64');
-		} else if (fieldType.kind == 'TLBBoolType') {
+		} else if (fieldType.kind === 'TLBBoolType') {
 			res = false;
-		} else if (fieldType.kind == 'TLBCoinsType') {
+		} else if (fieldType.kind === 'TLBCoinsType') {
 			res = '0';
-		} else if (fieldType.kind == 'TLBVarIntegerType') {
+		} else if (fieldType.kind === 'TLBVarIntegerType') {
 			res = '0';
-		} else if (fieldType.kind == 'TLBAddressType') {
-			if (fieldType.addrType == 'Internal') {
+		} else if (fieldType.kind === 'TLBAddressType') {
+			if (fieldType.addrType === 'Internal') {
 				res =
 					'0:0000000000000000000000000000000000000000000000000000000000000000';
-			} else if (fieldType.addrType == 'External') {
+			} else if (fieldType.addrType === 'External') {
 				res = null;
-			} else if (fieldType.addrType == 'Any') {
+			} else if (fieldType.addrType === 'Any') {
 				res = null;
 			}
-		} else if (fieldType.kind == 'TLBExprMathType') {
+		} else if (fieldType.kind === 'TLBExprMathType') {
 			if (isBigIntExprForJson(fieldType)) {
 				res = '0';
 			} else {
 				res = 0;
 			}
-		} else if (fieldType.kind == 'TLBNegatedType') {
+		} else if (fieldType.kind === 'TLBNegatedType') {
 			res = 0;
-		} else if (fieldType.kind == 'TLBNamedType') {
+		} else if (fieldType.kind === 'TLBNamedType') {
 			if (y.has(fieldType.name)) {
 				res = y.get(fieldType.name);
 			} else {
@@ -257,7 +257,7 @@ export class DefaultJsonGenerator {
 				res = this.getTLBTypeNameResult(fieldType.name, ctx, parameters);
 
 				let i = ctx.constructorsCalculated.get(fieldType.name);
-				if (i != undefined) {
+				if (i !== undefined) {
 					let constructor = this.tlbCode.types.get(fieldType.name)!
 						.constructors[i];
 					for (let i = 0; i < constructor.parameters.length; i++) {
@@ -265,7 +265,7 @@ export class DefaultJsonGenerator {
 							let theExpr = constructor.parameters[i].variable.initialExpr;
 							if (theExpr) {
 								let argument = fieldType.arguments[i];
-								if (argument.kind == 'TLBExprMathType') {
+								if (argument.kind === 'TLBExprMathType') {
 									if (argument.initialExpr instanceof TLBVarExpr) {
 										y.set(argument.initialExpr.x, theExpr);
 									}
@@ -275,9 +275,9 @@ export class DefaultJsonGenerator {
 					}
 				}
 			}
-		} else if (fieldType.kind == 'TLBCondType') {
+		} else if (fieldType.kind === 'TLBCondType') {
 			res = null;
-		} else if (fieldType.kind == 'TLBMultipleType') {
+		} else if (fieldType.kind === 'TLBMultipleType') {
 			let x = this.handleType(field, fieldType.value, ctx, y);
 			res = [];
 			let t = evaluateExpression(fieldType.times, y);
@@ -286,16 +286,15 @@ export class DefaultJsonGenerator {
 					res.push(x);
 				}
 			}
-		} else if (fieldType.kind == 'TLBCellInsideType') {
-			throw 'Not implemented TLBCellInsideType';
-			// TODO
-			res = 'tlbcellsinsidetype';
-		} else if (fieldType.kind == 'TLBHashmapType') {
+		} else if (fieldType.kind === 'TLBCellInsideType') {
+			throw new Error('Not implemented TLBCellInsideType');
+			// TODO res = 'tlbcellsinsidetype';
+		} else if (fieldType.kind === 'TLBHashmapType') {
 			res = {};
-		} else if (fieldType.kind == 'TLBExoticType') {
+		} else if (fieldType.kind === 'TLBExoticType') {
 			res = this.beginCell().endCell().toBoc().toString('base64');
 		} else {
-			throw 'No such kind';
+			throw new Error('No such kind');
 		}
 
 		return res;
@@ -308,7 +307,7 @@ export class DefaultJsonGenerator {
 	): any[] {
 		let parameters: any[] = [];
 		args.forEach((argument) => {
-			if (argument.kind == 'TLBNamedType') {
+			if (argument.kind === 'TLBNamedType') {
 				let currentParameters = this.getParameters(argument.arguments, ctx, y);
 				let tmp = this.getTLBTypeNameResult(
 					argument.name,
@@ -322,17 +321,17 @@ export class DefaultJsonGenerator {
 					if (t) {
 						parameters.push(t);
 					} else {
-						throw 'wrong';
+						throw new Error('wrong');
 					}
 				}
-			} else if (argument.kind == 'TLBCellType') {
+			} else if (argument.kind === 'TLBCellType') {
 				parameters.push(this.beginCell().endCell().toBoc().toString('base64'));
-			} else if (argument.kind == 'TLBCellInsideType') {
+			} else if (argument.kind === 'TLBCellInsideType') {
 				let currentParameters = this.getParameters([argument.value], ctx, y);
 				parameters = parameters.concat(currentParameters);
 			} else {
 				let param: number | undefined = 2;
-				if (argument.kind == 'TLBExprMathType') {
+				if (argument.kind === 'TLBExprMathType') {
 					param = evaluateExpression(argument.expr, y);
 				}
 				parameters.push(param);

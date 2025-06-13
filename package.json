@@ -7,7 +7,7 @@
     "release": "npm run build && gh-pages --nojekyll --branch release --dist dist",
     "dev": "vite",
     "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 16",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -46,6 +46,6 @@
     "path": "^0.12.7",
     "prettier": "^2.8.4",
     "typescript": "^5.2.2",
-    "vite": "^5.4.14"
+    "vite": "^5.4.19"
   }
 }

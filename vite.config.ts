@@ -1,5 +1,4 @@
 import { resolve } from 'path';
-import { config } from 'process';
 import { defineConfig, UserConfig } from 'vite';
 import inject from '@rollup/plugin-inject';
 import react from '@vitejs/plugin-react';

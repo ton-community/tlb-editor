@@ -13,7 +13,7 @@ async function typeToHumanJson(obj: any) {
 		await importTonDependencies();
 
 	let result: any = {};
-	if (obj == undefined) {
+	if (obj === undefined) {
 		return null;
 	}
 	if (obj.kind) {

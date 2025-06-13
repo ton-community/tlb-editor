@@ -46,9 +46,8 @@ class X {
 	Dictionary: any;
 	beginCell: any;
 
-	constructor() {}
 	fillConstructorIndex(tlbCode: TLBCode) {
-		if (constructorsIndex.size == 0) {
+		if (constructorsIndex.size === 0) {
 			tlbCode.types.forEach((tlbType: TLBType) => {
 				tlbType.constructors.forEach((constructor: TLBConstructor) => {
 					constructorsIndex.set(
@@ -114,7 +113,7 @@ class X {
 		result.kind = kindName;
 
 		constructor.variables.forEach((variable: TLBVariable) => {
-			if (variable.type == '#' && !variable.isField) {
+			if (variable.type === '#' && !variable.isField) {
 				result[variable.name] = json[variable.name];
 			}
 		});
@@ -139,7 +138,7 @@ class X {
 		json: any,
 		y: Map<string, TLBFieldType>
 	) {
-		if (field.subFields.length == 0) {
+		if (field.subFields.length === 0) {
 			let res: any = {};
 			res[field.name] = this.handleType(
 				field,
@@ -153,7 +152,7 @@ class X {
 			let res: any = {};
 			field.subFields.forEach((fieldDef: TLBField) => {
 				let json_to_pass =
-					json[fieldDef.name] != undefined ? json[fieldDef.name] : json;
+					json[fieldDef.name] !== undefined ? json[fieldDef.name] : json;
 				Object.assign(
 					res,
 					this.handleField(fieldDef, tlbCode, json_to_pass, y)
@@ -166,7 +165,7 @@ class X {
 	get_parameters(args: TLBFieldType[], y: Map<string, TLBFieldType>) {
 		let res: TLBFieldType[] = [];
 		args.forEach((arg) => {
-			if (arg.kind == 'TLBNamedType' && y.has(arg.name)) {
+			if (arg.kind === 'TLBNamedType' && y.has(arg.name)) {
 				res.push(y.get(arg.name)!);
 			} else {
 				res.push(arg);
@@ -184,13 +183,13 @@ class X {
 	) {
 		let res: any = json;
 
-		if (fieldType.kind == 'TLBNumberType') {
+		if (fieldType.kind === 'TLBNumberType') {
 			if (isBigIntForJson(fieldType)) {
 				res = BigInt(json);
 			} else {
 				res = json;
 			}
-		} else if (fieldType.kind == 'TLBBitsType') {
+		} else if (fieldType.kind === 'TLBBitsType') {
 			let builder = this.beginCell();
 			for (let i = 2; i < json.length; i++) {
 				let bit = parseInt(json[i]);
@@ -200,29 +199,29 @@ class X {
 				.endCell()
 				.beginParse()
 				.loadBits(json.length - 2);
-		} else if (fieldType.kind == 'TLBCellType') {
+		} else if (fieldType.kind === 'TLBCellType') {
 			res = this.Cell.fromBase64(json.toString());
-		} else if (fieldType.kind == 'TLBBoolType') {
+		} else if (fieldType.kind === 'TLBBoolType') {
 			res = json;
-		} else if (fieldType.kind == 'TLBCoinsType') {
+		} else if (fieldType.kind === 'TLBCoinsType') {
 			res = BigInt(json);
-		} else if (fieldType.kind == 'TLBVarIntegerType') {
+		} else if (fieldType.kind === 'TLBVarIntegerType') {
 			res = BigInt(json);
-		} else if (fieldType.kind == 'TLBAddressType') {
+		} else if (fieldType.kind === 'TLBAddressType') {
 			if (json == null) {
 				res = null;
 			} else {
 				res = this.Address.parse(json);
 			}
-		} else if (fieldType.kind == 'TLBExprMathType') {
+		} else if (fieldType.kind === 'TLBExprMathType') {
 			if (isBigIntExprForJson(fieldType)) {
 				res = BigInt(json);
 			} else {
 				res = json;
 			}
-		} else if (fieldType.kind == 'TLBNegatedType') {
+		} else if (fieldType.kind === 'TLBNegatedType') {
 			res = json;
-		} else if (fieldType.kind == 'TLBNamedType') {
+		} else if (fieldType.kind === 'TLBNamedType') {
 			if (y.has(fieldType.name)) {
 				let paramType = y.get(fieldType.name)!;
 				res = this.handleType(field, paramType, tlbCode, json, y);
@@ -235,20 +234,20 @@ class X {
 					parameters
 				);
 			}
-		} else if (fieldType.kind == 'TLBCondType') {
+		} else if (fieldType.kind === 'TLBCondType') {
 			if (json == null) {
 				res = undefined;
 			} else {
 				res = this.handleType(field, fieldType.value, tlbCode, json, y);
 			}
-		} else if (fieldType.kind == 'TLBMultipleType') {
+		} else if (fieldType.kind === 'TLBMultipleType') {
 			res = [];
 			for (let i = 0; i < json.length; i++) {
 				res.push(this.handleType(field, fieldType.value, tlbCode, json[i], y));
 			}
-		} else if (fieldType.kind == 'TLBCellInsideType') {
+		} else if (fieldType.kind === 'TLBCellInsideType') {
 			res = this.handleType(field, fieldType.value, tlbCode, json, y);
-		} else if (fieldType.kind == 'TLBHashmapType') {
+		} else if (fieldType.kind === 'TLBHashmapType') {
 			if (isBigIntExprForJson(fieldType.key)) {
 				res = this.Dictionary.empty(
 					this.Dictionary.Keys.BigInt(evaluateExpression(fieldType.key, y))
@@ -290,7 +289,7 @@ class X {
 					res.set(Number(intkey), value);
 				}
 			}
-		} else if (fieldType.kind == 'TLBExoticType') {
+		} else if (fieldType.kind === 'TLBExoticType') {
 			res = this.Cell.fromBase64(json.toString());
 		}
 
