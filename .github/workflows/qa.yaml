@@ -13,6 +13,14 @@ on:
     branches:
       - main
   pull_request:
+    paths-ignore:
+      - '.github/workflows/deploy.yaml'
+      - '.github/workflows/reward.yml'
+      - '.eslintrc'
+      - 'LICENSE'
+      - '.gitignore'
+      - '*.md'
+      - '*.json'
     branches:
       - main
 
