@@ -4,7 +4,8 @@ on:
   push:
     paths-ignore:
       - '.github/workflows/deploy.yaml'
-      - '.github/workflows/reward.yml'
+      - '.github/workflows/reward.yaml'
+      - '.github/workflows/reward-merged-prs.yaml'
       - '.eslintrc'
       - 'LICENSE'
       - '.gitignore'
@@ -15,7 +16,8 @@ on:
   pull_request:
     paths-ignore:
       - '.github/workflows/deploy.yaml'
-      - '.github/workflows/reward.yml'
+      - '.github/workflows/reward.yaml'
+      - '.github/workflows/reward-merged-prs.yaml'
       - '.eslintrc'
       - 'LICENSE'
       - '.gitignore'
